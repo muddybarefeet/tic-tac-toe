@@ -12,6 +12,12 @@ const makeBoard = function () {
   return result;
 };
 
+var constGenRandomIndex = function () {
+  var randomRow = Math.floor(Math.random()*2);
+  var randomCell = Math.floor(Math.random()*2);
+  return [randomRow, randomCell];
+} 
+
 class App extends Component {
 
   constructor(props) {
