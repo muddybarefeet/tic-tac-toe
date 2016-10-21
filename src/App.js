@@ -52,6 +52,7 @@ class App extends Component {
       }, function () {
         this.checkRow();
         this.checkCol();
+        this.checkDiagonal();
       });
     }
 
@@ -80,6 +81,43 @@ class App extends Component {
         this.setState({
           winner: row1[i]
         })
+      }
+    }
+  }
+
+  checkDiagonal () {
+    for (var i = 0; i < this.state.board.length; i++) {
+      var leftDiag = null;
+      var rightDiag = null;
+      if (i%2 === 0) {
+        //if the left or right not set then first line
+        if (leftDiag === null && rightDiag === null) {
+          if (this.state.board[i][0] !== null) {
+            leftDiag = this.state.board[i][0];
+          } else if (this.state.board[i][2] !== null) {
+            rightDiag = this.state.board[i][2];
+          } else {
+            return;
+          }
+        } else {
+          if (leftDiag !== null && this.state.board[i][2] !== null) {
+            console.log('left win')
+            this.setState({
+              winner: leftDiag
+            });
+          } else if (rightDiag !== null && this.state.board[i][0] !== null) {
+            console.log('right win')
+            this.setState({
+              winner: rightDiag
+            });
+          }
+        }
+      
+      } else {
+        //check the odd index
+        if (this.state.board[i][1] !== leftDiag || this.state.board[i][1] !== rightDiag) {
+          return;
+        }
       }
     }
   }
