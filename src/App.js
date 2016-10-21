@@ -12,7 +12,15 @@ const makeBoard = function () {
   return result;
 };
 
-var constGenRandomIndex = function () {
+const checkCol = function () {
+
+}
+
+const checkDiagonal = function () {
+
+}
+
+const constGenRandomIndex = function () {
   var randomRow = Math.floor(Math.random()*2);
   var randomCell = Math.floor(Math.random()*2);
   return [randomRow, randomCell];
@@ -25,7 +33,8 @@ class App extends Component {
     this.state = {
       board: makeBoard(),
       player: CROSS,
-      turnCount: 0
+      turnCount: 0,
+      winner: null
     }
   }
 
@@ -34,21 +43,49 @@ class App extends Component {
     var currentNumberOfTurns = this.state.turnCount;
 
     var newBoard = this.state.board.slice();
-    newBoard[row][cell] = currentTurn;
+    if (newBoard[row][cell] === null) {
+      newBoard[row][cell] = currentTurn;
+      this.setState({
+        board: newBoard,
+        player: currentTurn === NAUGHT ? CROSS : NAUGHT,
+        turnCount: currentNumberOfTurns+=1
+      }, function () {
+        this.checkRow();
+        this.checkCol();
+      });
+    }
 
-    this.setState({
-      board: newBoard,
-      player: currentTurn === NAUGHT ? CROSS : NAUGHT,
-      turnCount: currentNumberOfTurns+=1
+  }
+
+  checkRow () {
+    this.state.board.map( (row) => {
+      if (row[0] === row[1] && row[1] === row[2] && row[0] !== null) {
+        //user won
+        this.setState({
+          winner: row[0]
+        })
+      }
     });
+  }
 
+  checkCol () {
+    var row1 = this.state.board[0].slice();
+    var row2 = this.state.board[1].slice();
+    var row3 = this.state.board[2].slice();
+
+    for (var i = 0; i < 3; i++) {
+      if (row1[i] === row2[i] && row2[i] === row3[i] && row1[i] !== null) {
+        //user won
+        console.log('winner in col', row1[i])
+        this.setState({
+          winner: row1[i]
+        })
+      }
+    }
   }
 
   render() {
 
-    var finished;
-    
-    if (this.state.turnCount === 9) finished = "Game Over";
 
     var board = this.state.board.map( (row, index) => {
       var newRow = row.map( (cell, i) => {
@@ -61,6 +98,7 @@ class App extends Component {
       <div className="container">
         <h1>This is a game of Tic Tac Toe</h1>
         {this.state.turnCount === 9 ? <p>Game over</p> : null}
+        {this.state.winner !== null ? <p>{this.state.winner}{"'"}s win!</p> : null}
         <table className="table-bordered">
           <tbody>
             {board}
