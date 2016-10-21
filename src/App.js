@@ -41,6 +41,9 @@ class App extends Component {
   handleClick (row,cell) {
     var currentTurn = this.state.player;
     var currentNumberOfTurns = this.state.turnCount;
+    
+    //stop adding further pieces after winner
+    if (this.state.winner !== null) return;
 
     var newBoard = this.state.board.slice();
     if (newBoard[row][cell] === null) {
@@ -86,38 +89,38 @@ class App extends Component {
   }
 
   checkDiagonal () {
+
+    var leftDiag = null;
+    var rightDiag = null;
     for (var i = 0; i < this.state.board.length; i++) {
-      var leftDiag = null;
-      var rightDiag = null;
-      if (i%2 === 0) {
-        //if the left or right not set then first line
-        if (leftDiag === null && rightDiag === null) {
-          if (this.state.board[i][0] !== null) {
-            leftDiag = this.state.board[i][0];
-          } else if (this.state.board[i][2] !== null) {
-            rightDiag = this.state.board[i][2];
-          } else {
-            return;
-          }
-        } else {
-          if (leftDiag !== null && this.state.board[i][2] !== null) {
-            console.log('left win')
-            this.setState({
-              winner: leftDiag
-            });
-          } else if (rightDiag !== null && this.state.board[i][0] !== null) {
-            console.log('right win')
-            this.setState({
-              winner: rightDiag
-            });
-          }
-        }
-      
-      } else {
+      if (i === 0) {
+        console.log('checking top diagonal')
+        if (this.state.board[i][0] === null && this.state.board[i][2] === null) return;
+        
+        if (this.state.board[i][0] !== null) rightDiag = this.state.board[i][0];
+        if (this.state.board[i][2] !== null) leftDiag = this.state.board[i][2];
+        console.log('-------',rightDiag, leftDiag);
+      } else if (i === 1) {
         //check the odd index
-        if (this.state.board[i][1] !== leftDiag || this.state.board[i][1] !== rightDiag) {
+        if (this.state.board[i][1] === null) return;
+        if (leftDiag === this.state.board[i][1] || rightDiag === this.state.board[i][1]) {
+          console.log('center diagonal one match');
+        } else {
           return;
         }
+
+      } else if (i === 2) {
+        console.log('last diagonal');
+        if (leftDiag !== null && this.state.board[i][0] === leftDiag) {
+          this.setState({
+            winner: leftDiag
+          })
+        } else if (rightDiag !== null && this.state.board[i][2] === leftDiag) {
+          this.setState({
+            winner: rightDiag
+          })
+        }
+
       }
     }
   }
