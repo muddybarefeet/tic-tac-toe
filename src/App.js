@@ -125,6 +125,15 @@ class App extends Component {
     }
   }
 
+  handleReset () {
+    this.setState({
+      board: makeBoard(),
+      player: CROSS,
+      turnCount: 0,
+      winner: null
+    })
+  }
+
   render() {
 
 
@@ -145,8 +154,10 @@ class App extends Component {
             {board}
           </tbody>
         </table>
+        
+        <div style={{height:"40px"}}></div>
 
-
+        <button type="button" onClick={this.handleReset.bind(this)} className="btn btn-success">Re play</button>
       </div>
     );
   }
