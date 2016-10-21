@@ -94,12 +94,12 @@ class App extends Component {
     var rightDiag = null;
     for (var i = 0; i < this.state.board.length; i++) {
       if (i === 0) {
-        console.log('checking top diagonal')
+
         if (this.state.board[i][0] === null && this.state.board[i][2] === null) return;
         
         if (this.state.board[i][0] !== null) rightDiag = this.state.board[i][0];
         if (this.state.board[i][2] !== null) leftDiag = this.state.board[i][2];
-        console.log('-------',rightDiag, leftDiag);
+
       } else if (i === 1) {
         //check the odd index
         if (this.state.board[i][1] === null) return;
@@ -110,12 +110,12 @@ class App extends Component {
         }
 
       } else if (i === 2) {
-        console.log('last diagonal');
+
         if (leftDiag !== null && this.state.board[i][0] === leftDiag) {
           this.setState({
             winner: leftDiag
           })
-        } else if (rightDiag !== null && this.state.board[i][2] === leftDiag) {
+        } else if (rightDiag !== null && this.state.board[i][2] === rightDiag) {
           this.setState({
             winner: rightDiag
           })
